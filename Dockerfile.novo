@@ -1,0 +1,22 @@
+FROM jenkins/jenkins:lts-jdk21
+
+USER root
+
+ARG DOCKER_GID=998
+
+# Instala dependências
+RUN apt-get update && \
+  apt-get install -y \
+  docker.io \
+  git \
+  curl \
+  unzip \
+  wget && \
+  apt-get clean && \
+  rm -rf /var/lib/apt/lists/*
+
+# Adiciona o usuário jenkins ao grupo docker
+RUN groupadd -f -g ${DOCKER_GID} docker && \ 
+  usermod -aG docker jenkins
+
+USER jenkins

@@ -1,0 +1,20 @@
+FROM jenkins/jenkins:latest-jdk21
+
+# Instala o Blue Ocean e plugins relacionados
+RUN jenkins-plugin-cli --plugins blueocean docker-workflow
+
+# Configura o Docker (opcional, necessário se quiser Docker-in-Docker)
+USER root
+
+RUN apt-get update && apt-get install -y \
+  curl \
+  git \
+  lsb-release \
+  && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update \
+  && apt-get install -y docker.io
+
+RUN usermod -aG docker jenkins
+
+USER jenkins
